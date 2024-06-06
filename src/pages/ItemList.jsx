@@ -83,11 +83,60 @@ const ItemListWrapper = styled.div`
   justify-content: space-around;
 `;
 
+const items = {
+  "전체 보기": [
+    { name: "축구공", price: "3,000원" },
+    { name: "축구화", price: "5,000원" },
+    { name: "풋살화", price: "5,000원" },
+    { name: "장갑", price: "2,000원" },
+    { name: "스타킹", price: "1,000원" },
+    { name: "정강이 보호대", price: "2,000원" },
+    { name: "배트", price: "3,000원" },
+    { name: "글러브", price: "1,000원" },
+    { name: "야구공 구매", price: "개당 2,000원" },
+    { name: "배드민턴화", price: "3,000원" },
+    { name: "셔틀콕 구매", price: "개당 1,000원" },
+    { name: "라켓", price: "5,000원" },
+    { name: "농구화", price: "5,000원" },
+    { name: "농구공", price: "2,000원" },
+    { name: "테니스화", price: "5,000원" },
+    { name: "테니스 공 구매", price: "개당 1,500원" },
+    { name: "테니스 라켓", price: "5,000원" },
+  ],
+  축구: [
+    { name: "축구공", price: "3,000원" },
+    { name: "축구화", price: "5,000원" },
+    { name: "풋살화", price: "5,000원" },
+    { name: "장갑", price: "2,000원" },
+    { name: "스타킹", price: "1,000원" },
+    { name: "정강이 보호대", price: "2,000원" },
+  ],
+  야구: [
+    { name: "배트", price: "3,000원" },
+    { name: "글러브", price: "1,000원" },
+    { name: "야구공 구매", price: "개당 2,000원" },
+  ],
+  배드민턴: [
+    { name: "배드민턴화", price: "3,000원" },
+    { name: "셔틀콕 구매", price: "개당 1,000원" },
+    { name: "라켓", price: "5,000원" },
+  ],
+  농구: [
+    { name: "농구화", price: "5,000원" },
+    { name: "농구공", price: "2,000원" },
+  ],
+  테니스: [
+    { name: "테니스화", price: "5,000원" },
+    { name: "테니스공 구매", price: "개당 1,500원" },
+    { name: "테니스 라켓", price: "5,000원" },
+  ],
+};
+
 function ItemList() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
-  const [category, setCategory] = useState("");
-  const [showNextButton, setShowNextButton] = useState(false); // 새로운 상태 추가
+  const [category, setCategory] = useState("전체 보기");
+  const [showNextButton, setShowNextButton] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -102,7 +151,7 @@ function ItemList() {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-    setShowNextButton(true); // 아이템 선택 시 다음으로 버튼 표시
+    setShowNextButton(true);
     setIsOpen(false);
   };
 
@@ -152,45 +201,18 @@ function ItemList() {
           필요한 용품을 선택해주세요!
         </div>
         <ItemListWrapper>
-          <Item
-            selected={selectedItem === "축구공"}
-            onClick={() => handleItemClick("축구공")}
-          >
-            <b>축구공</b> (3,000원)
-          </Item>
-          <Item
-            selected={selectedItem === "축구화"}
-            onClick={() => handleItemClick("축구화")}
-          >
-            <b>축구화</b> (5,000원)
-          </Item>
-          <Item
-            selected={selectedItem === "풋살화"}
-            onClick={() => handleItemClick("풋살화")}
-          >
-            <b>풋살화</b> (5,000원)
-          </Item>
-          <Item
-            selected={selectedItem === "장갑"}
-            onClick={() => handleItemClick("장갑")}
-          >
-            <b>장갑</b> (2,000원)
-          </Item>
-          <Item
-            selected={selectedItem === "스타킹"}
-            onClick={() => handleItemClick("스타킹")}
-          >
-            <b>스타킹</b> (1,000원)
-          </Item>
-          <Item
-            selected={selectedItem === "정강이 보호대"}
-            onClick={() => handleItemClick("정강이 보호대")}
-          >
-            <b>정강이 보호대</b> (2,000원)
-          </Item>
+          {items[category].map((item, index) => (
+            <Item
+              key={index}
+              selected={selectedItem === item.name}
+              onClick={() => handleItemClick(item.name)}
+            >
+              <b>{item.name}</b> ({item.price})
+            </Item>
+          ))}
         </ItemListWrapper>
       </div>
-      {showNextButton && ( // 조건부로 버튼 표시
+      {showNextButton && (
         <Container>
           <NextButton onClick={handleNextClick}>다음으로</NextButton>
         </Container>

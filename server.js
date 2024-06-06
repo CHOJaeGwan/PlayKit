@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
-require("../dotenv").config();
+require("dotenv").config();
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,23 +16,24 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
+
+const PASSWORD = process.env.EMAIL_PASSWORD;
+
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: "jjgs1235@yonsei.ac.kr",
-    pass: EMAIL_PASSWORD,
+    pass: PASSWORD,
   },
 });
 
 app.post("/api/send-email", (req, res) => {
-  const { size, date, phone } = req.body;
-
+  const { size, date, phone, item, name, address, addressDetail } = req.body;
   const mailOptions = {
     from: "jjgs1235@yonsei.ac.kr",
     to: "jjgs1235@yonsei.ac.kr",
     subject: "새 예약",
-    text: `새 예약이 도착했습니다:\n\n사이즈: ${size}\n날짜: ${date}\n전화번호: ${phone}`,
+    text: `새 예약이 도착했습니다:\n\n아이템: ${item}\n사이즈: ${size}\n날짜: ${date} \n이름: ${name}\n전화번호: ${phone} \n주소: ${address}\n상세주소: ${addressDetail}`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {

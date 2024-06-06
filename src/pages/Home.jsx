@@ -19,8 +19,9 @@ const AddressDetail = styled.input`
   padding: 10px;
   font-size: 16px;
   font-weight: bold;
-  color: grey;
+  color: black;
 `;
+
 function Home() {
   const { address, setAddress, addressDetail, setAddressDetail } =
     useContext(AddressContext);

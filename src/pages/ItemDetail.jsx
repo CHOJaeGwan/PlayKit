@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Layout from "../components/Layout/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import DatePicker from "../components/Calender/Calender";
 import axios from "axios";
+import { AddressContext } from "../context/AddressContext";
+import PhoneInput from "../components/PhoneInput/PhoneInput";
 
 const Container = styled.div`
   margin: 30px 10px;
 `;
-const PhoneInput = styled.input`
+
+const NameInput = styled.input`
   background: white;
   width: 90%;
   height: 2vh;
@@ -20,7 +23,6 @@ const PhoneInput = styled.input`
   font-weight: bold;
   color: grey;
 `;
-
 const RadioContainer = styled.div`
   display: flex;
   margin: 5px;
@@ -54,6 +56,8 @@ function ItemDetail() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const { address, addressDetail } = useContext(AddressContext);
 
   const handleRadioChange = (event) => {
     const { value } = event.target;
@@ -68,25 +72,50 @@ function ItemDetail() {
     const { state } = location;
     if (state && state.selectedItem) {
       setItem(state.selectedItem);
-      if (state.selectedItem === "축구공") {
+      if (
+        state.selectedItem === "축구공" ||
+        state.selectedItem === "농구공" ||
+        state.selectedItem === "야구공 구매" ||
+        state.selectedItem === "셔틀콕 구매" ||
+        state.selectedItem === "테니스공 구매"
+      ) {
         setSelectedSize("1");
       }
     }
   }, [location, setSelectedSize]);
 
   const handleNextClick = async () => {
-    if (selectedSize && selectedDate && phone) {
+    const phonePattern = /^\d{3}-\d{3,4}-\d{4}$/;
+    if (!phonePattern.test(phone)) {
+      // 전화번호 형식이 올바르지 않을 때 알림 표시
+      alert("전화번호 형식이 올바르지 않습니다.");
+      return;
+    }
+    if (selectedSize && selectedDate && phone && name && address && item) {
       try {
         const response = await axios.post(
           "http://localhost:5001/api/send-email",
           {
+            item: item,
             size: selectedSize,
             date: selectedDate,
+            name: name,
             phone: phone,
+            address: address,
+            addressDetail: addressDetail,
           }
         );
         if (response.status === 200) {
-          navigate("/Finish", { state: { selectedSize, selectedDate, phone } });
+          navigate("/Finish", {
+            state: {
+              selectedSize,
+              selectedDate,
+              phone,
+              name,
+              address,
+              addressDetail,
+            },
+          });
         }
       } catch (error) {
         console.error("Error sending the email", error);
@@ -101,7 +130,11 @@ function ItemDetail() {
       <h2 style={{ textAlign: "center" }}>{item}</h2>
       <Container>
         <h3>사이즈</h3>
-        {(item === "풋살화" || item === "축구화") && (
+        {(item === "풋살화" ||
+          item === "축구화" ||
+          item === "농구화" ||
+          item === "배드민턴화" ||
+          item === "테니스화") && (
           <div>
             <RadioContainer>
               <RadioLabel>
@@ -254,6 +287,166 @@ function ItemDetail() {
             </RadioLabel>
           </RadioContainer>
         )}
+        {item === "배트" && (
+          <RadioContainer>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="S"
+                checked={selectedSize === "S"}
+                onChange={handleRadioChange}
+              />
+              <b>S</b> (28 - 31 inch)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="M"
+                checked={selectedSize === "M"}
+                onChange={handleRadioChange}
+              />
+              <b>M</b> (32 - 33 inch)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="L"
+                checked={selectedSize === "L"}
+                onChange={handleRadioChange}
+              />
+              <b>L</b> (33 - 34 inch)
+            </RadioLabel>
+          </RadioContainer>
+        )}
+        {item === "글러브" && (
+          <RadioContainer>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="outfielder"
+                checked={selectedSize === "outfielder"}
+                onChange={handleRadioChange}
+              />
+              <b>외야수 글러브</b>
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="infielder"
+                checked={selectedSize === "outfielder"}
+                onChange={handleRadioChange}
+              />
+              <b>내야수 글러브</b>
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="pitcher"
+                checked={selectedSize === "pitcher"}
+                onChange={handleRadioChange}
+              />
+              <b>투수</b>
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="catcher"
+                checked={selectedSize === "catcher"}
+                onChange={handleRadioChange}
+              />
+              <b>포수</b>
+            </RadioLabel>
+          </RadioContainer>
+        )}
+        {item === "라켓" && (
+          <RadioContainer>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="G1"
+                checked={selectedSize === "G1"}
+                onChange={handleRadioChange}
+              />
+              <b>G1</b> (93mm)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="G2"
+                checked={selectedSize === "G2"}
+                onChange={handleRadioChange}
+              />
+              <b>G2</b> (90mm)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="G3"
+                checked={selectedSize === "G3"}
+                onChange={handleRadioChange}
+              />
+              <b>G3</b> (87mm)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="G4"
+                checked={selectedSize === "G4"}
+                onChange={handleRadioChange}
+              />
+              <b>G4</b> (84mm)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="G5"
+                checked={selectedSize === "G5"}
+                onChange={handleRadioChange}
+              />
+              <b>G5</b> (81mm)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="G6"
+                checked={selectedSize === "G6"}
+                onChange={handleRadioChange}
+              />
+              <b>G6</b> (78mm)
+            </RadioLabel>
+          </RadioContainer>
+        )}
+        {item === "테니스 라켓" && (
+          <RadioContainer>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="mid"
+                checked={selectedSize === "mid"}
+                onChange={handleRadioChange}
+              />
+              <b>미드</b> (~94 sq.in)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="midPlus"
+                checked={selectedSize === "midPlus"}
+                onChange={handleRadioChange}
+              />
+              <b>미드플러스</b> (95-105 sq.in)
+            </RadioLabel>
+            <RadioLabel>
+              <input
+                type="radio"
+                value="mid"
+                checked={selectedSize === "mid"}
+                onChange={handleRadioChange}
+              />
+              <b>오버</b> (106~ sq.in)
+            </RadioLabel>
+          </RadioContainer>
+        )}
       </Container>
       <hr />
       <Container>
@@ -262,18 +455,30 @@ function ItemDetail() {
       </Container>
       <hr />
       <Container>
+        <h3>이름</h3>
+        <NameInput
+          type="text"
+          placeholder="이름을 입력해주세요."
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </Container>
+      <hr></hr>
+      <Container>
         <h3>전화 번호</h3>
         <PhoneInput
           type="text"
           placeholder="전화번호를 입력해주세요."
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => setPhone(e)}
         />
       </Container>
       <Container>
         <NextButton
           onClick={handleNextClick}
-          disabled={!selectedSize || !selectedDate || !phone}
+          disabled={
+            !selectedSize || !selectedDate || !phone || !name || !address
+          }
         >
           예약 완료
         </NextButton>

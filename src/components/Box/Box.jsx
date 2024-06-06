@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { AddressContext } from "../../context/AddressContext";
 
 const BoxWrapper = styled.div`
   display: flex;
@@ -54,8 +55,13 @@ const AllText = styled.div`
 
 function Box({ index, content }) {
   const navigate = useNavigate();
+  const { address } = useContext(AddressContext);
   const handleClick = () => {
-    navigate(`/items`, { state: { category: content } });
+    if (address) {
+      navigate(`/items`, { state: { category: content } });
+    } else {
+      alert("주소를 입력해주세요.");
+    }
   };
   let imagePath;
   try {
