@@ -3,6 +3,7 @@ import Layout from "../components/Layout/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import DatePicker from "../components/Calender/Calender";
+import axios from "axios";
 
 const Container = styled.div`
   margin: 30px 10px;
@@ -53,13 +54,16 @@ function ItemDetail() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [phone, setPhone] = useState("");
+
   const handleRadioChange = (event) => {
     const { value } = event.target;
     setSelectedSize(value);
   };
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
   useEffect(() => {
     const { state } = location;
     if (state && state.selectedItem) {
@@ -70,9 +74,23 @@ function ItemDetail() {
     }
   }, [location, setSelectedSize]);
 
-  const handleNextClick = () => {
-    if (selectedSize && selectedDate) {
-      navigate("/Finish", { state: { selectedSize, selectedDate } });
+  const handleNextClick = async () => {
+    if (selectedSize && selectedDate && phone) {
+      try {
+        const response = await axios.post(
+          "http://localhost:5001/api/send-email",
+          {
+            size: selectedSize,
+            date: selectedDate,
+            phone: phone,
+          }
+        );
+        if (response.status === 200) {
+          navigate("/Finish", { state: { selectedSize, selectedDate, phone } });
+        }
+      } catch (error) {
+        console.error("Error sending the email", error);
+      }
     }
   };
 
