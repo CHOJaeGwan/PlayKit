@@ -1,24 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import ItemList from "./pages/ItemList";
+import "./assets/styles/global.css"; // global.css를 임포트합니다.
+import ItemDetail from "./pages/ItemDetail";
+import Finish from "./pages/Finish";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/items" element={<ItemList />} />
+        <Route path="/item-detail" element={<ItemDetail />} />
+        <Route path="/finish" element={<Finish />} />
+      </Routes>
+    </Router>
   );
 }
 
