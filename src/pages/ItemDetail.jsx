@@ -103,8 +103,7 @@ function ItemDetail() {
             phone: phone,
             address: address,
             addressDetail: addressDetail,
-          },
-          { withCredentials: true }
+          }
         );
         if (response.status === 200) {
           navigate("/Finish", {

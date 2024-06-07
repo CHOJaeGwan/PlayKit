@@ -17,6 +17,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 const PASSWORD = process.env.EMAIL_PASSWORD;
 
 const transporter = nodemailer.createTransport({
