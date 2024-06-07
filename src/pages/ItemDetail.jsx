@@ -94,7 +94,7 @@ function ItemDetail() {
     if (selectedSize && selectedDate && phone && name && address && item) {
       try {
         const response = await axios.post(
-          "https://lovely-turkey-67.loca.lt/api/send-email",
+          "http://localhost:5001/api/send-email",
           {
             item: item,
             size: selectedSize,
