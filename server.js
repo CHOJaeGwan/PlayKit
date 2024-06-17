@@ -32,6 +32,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 app.post("/api/send-email", (req, res) => {
   const { size, date, phone, item, name, address, addressDetail } = req.body;
   const mailOptions = {

@@ -94,7 +94,7 @@ function ItemDetail() {
     if (selectedSize && selectedDate && phone && name && address && item) {
       try {
         const response = await axios.post(
-          "http://localhost:5001/api/send-email",
+          "http://ec2-43-203-180-170.ap-northeast-2.compute.amazonaws.com:5001/api/send-email",
           {
             item: item,
             size: selectedSize,
