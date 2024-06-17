@@ -87,7 +87,6 @@ function ItemDetail() {
   const handleNextClick = async () => {
     const phonePattern = /^\d{3}-\d{3,4}-\d{4}$/;
     if (!phonePattern.test(phone)) {
-      // 전화번호 형식이 올바르지 않을 때 알림 표시
       alert("전화번호 형식이 올바르지 않습니다.");
       return;
     }
@@ -103,6 +102,9 @@ function ItemDetail() {
             phone: phone,
             address: address,
             addressDetail: addressDetail,
+          },
+          {
+            withCredentials: true, // 추가된 설정
           }
         );
         if (response.status === 200) {

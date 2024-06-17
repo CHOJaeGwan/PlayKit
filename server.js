@@ -9,9 +9,9 @@ app.use(bodyParser.json());
 
 // CORS 설정
 const corsOptions = {
-  origin: ["http://localhost:3000", "https://playkit.netlify.app"], // 허용할 도메인
+  origin: ["http://localhost:3000", "https://playkit.netlify.app"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  preflightContinue: false,
+  credentials: true, // 추가된 설정
   optionsSuccessStatus: 204,
 };
 
